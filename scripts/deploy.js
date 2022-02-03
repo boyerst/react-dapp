@@ -14,9 +14,14 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+  // Declare var and fetch contract that we want to deploy
   const Greeter = await hre.ethers.getContractFactory("Greeter");
+  // Declare var and call Greet.deploy
+    // Passing in the constructor text
+    // This is the text we pass to the contructor to set the initial value of greeting when we first deploy the contract
   const greeter = await Greeter.deploy("Hello, Hardhat!");
 
+  // Wait for it to be deployed
   await greeter.deployed();
 
   console.log("Greeter deployed to:", greeter.address);
