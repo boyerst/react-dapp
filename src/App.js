@@ -27,13 +27,16 @@ function App() {
     // If the globally available Ethereum API used to identify metamask account is NOT of data type undefined, then do these things...
     if (typeof window.ethereum !== 'undefined') {
       // Create new provider using ethers
+        // We use Web3Provider because we are already connected via MetaMask
         // Declare new ethers.providers.Web3Provider and pass in the Ethereum API using window.ethereum
       const provider = new ethers.providers.Web3Provider(window.ethereum)
-      // Fetch the contract
+      // Create an instance of the contract
         //  new ethers.Contract( address , abi , signerOrProvider )
       const contract = new ethers.Contract(greeterAddress, Greeter.abi, provider)
       try {
+        // Using the contract instance we can call greet() from our contract and fetch the value we are reading from the blockchain
         const data = await contract.greet()
+        // Print out the current value of greeting 
         console.log('data: ', data)
       } catch (err) {
         console.log("Error: ", err)
@@ -43,21 +46,32 @@ function App() {
 
   // call the smart contract, send an update
   async function setGreeting() {
+    // Check if they have entered a greeting so that we don't update with an empty string
     if (!greeting) return
     // If the globally available Ethereum API used to identify metamask account is NOT of data type undefined, then do these things...
     if (typeof window.ethereum !== 'undefined') {
-      // Call requestAccount
+      // Wait for the user to enable their account to be connected
       await requestAccount()
+      // We create another provider
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      // Request signature using connect to JSON-RPC account syntax
+      // Since we are writing to the blockchain we must create a transaction
+        // To execute a transaction we request signature to sign the transaction
+        // Using connect to JSON-RPC account syntax
       const signer = provider.getSigner()
-       // Fetch the contract
+       // Create a new instance of the contract
         //  new ethers.Contract( address , abi , signerOrProvider )
         // This time we pass in signer instead of provider because we are writing to the contract
       const contract = new ethers.Contract(greeterAddress, Greeter.abi, signer)
-      // Pass in the current state❓❓❓
+      // Call contract.setGreeting and pass in the greeting variable that is local
+        // ie whatever the user types into the form the update the greeting using setGreeting()
       const transaction = await contract.setGreeting(greeting)
+      // Set greeting value to an empty string
+      setGreetingValue('')
+      // Wait for the transaction to return from the blockchain
+        // Test env: will return very quickly
+        // Production env: will take a little longer
       await transaction.wait()
+      // Call fetchGreeting again to log out the new value
       fetchGreeting()
     }
   }
@@ -65,14 +79,21 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        {/* When user clicks, fetchGreeting will be invoked */}
         <button onClick={fetchGreeting}>Fetch Greeting</button>
+        {/* Invoke setGreeting with new input value */}
         <button onClick={setGreeting}>Set Greeting</button>
         {/*
           Event handler calls setGreetingValue which is the function from useState hooks that allows us to set state
-          Where e.target.value is the value of the input
+          Where e.target.value is the value of the input/whatever is written to the UI
           We pass the event object and then specify the target of that object with .target.value
         */}
-        <input onChange={e => setGreetingValue(e.target.value)} placeholder="Set greeting" />
+        <input 
+          onChange={e => setGreetingValue(e.target.value)} 
+          placeholder="Set greeting" 
+          // Will update UI to empty string once greeting has been reset to an empty string
+          value={greeting}
+        />
       </header>
     </div>
   );
