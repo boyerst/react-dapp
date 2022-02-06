@@ -14,7 +14,7 @@ function App() {
     // Where
       // greeting = 1st element of the useState array from React is the current state
       // setGreetingValue = 2nd element of the useState array from React is a function we can use to call to set new state
-  const [greeting, setGreetingValue] = useState()
+  const [greeting, setGreetingValue] = useState('')
 
   // Request access to the user's MetaMask account
   async function requestAccount() {
