@@ -20,11 +20,15 @@ async function main() {
     // Passing in the constructor text
     // This is the text we pass to the contructor to set the initial value of greeting when we first deploy the contract
   const greeter = await Greeter.deploy("Hello, Hardhat!");
-
   // Wait for it to be deployed
   await greeter.deployed();
-
   console.log("Greeter deployed to:", greeter.address);
+
+
+  const Token = await hre.ethers.getContractFactory("Token");
+  const token = await Token.deploy();
+  await token.deployed();
+  console.log("Token deployed to:", token.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
