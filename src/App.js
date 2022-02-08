@@ -42,6 +42,24 @@ function App() {
   }
 
 
+  async function sendCoins() {
+
+    if (typeof window.ethereum !== 'undefined') {
+      // Request user account permissions
+      await requestAccount()
+      // Create new provider
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      // Create a new signer because will be writing
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(tokenAddress, Token.abi, signer);
+      // Pass in the address of the receiver and the amount to send
+      const transaction = await contract.transfer(userAccount, amount);
+      // Wait for transaction to execute
+      await transaction.wait();
+      console.log(`${amount} Coins successfully sent to ${userAccount}`);
+    }
+  }
+
 
 
 
