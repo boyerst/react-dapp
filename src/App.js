@@ -3,10 +3,11 @@ import { useState } from 'react';
 // Import ethers library from ethers.js
 import { ethers } from 'ethers'
 import Greeter from './artifacts/contracts/Greeter.sol/Greeter.json'
-
+import Token from './artifacts/contracts/Token.sol/Token.json'
 
 // Store contract address in a variable
 const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+const tokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
 function App() {
   // Store greeting in local state
@@ -15,12 +16,34 @@ function App() {
       // greeting = 1st element of the useState array from React is the current state
       // setGreetingValue = 2nd element of the useState array from React is a function we can use to call to set new state
   const [greeting, setGreetingValue] = useState('')
+  // Add state for ability to send tokens to other people...
+  // Set user account for the person we want to send the tokens to
+  const [userAccount, setUserAccount] = useState('')
+  // Set the amount of tokens that we want to send
+    // Default to 0
+  const [amount, setAmount] = useState(0)
 
   // Request access to the user's MetaMask account
   async function requestAccount() {
     // Request access using web3 wallet permissions syntax
     await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
+
+  // Function to read the balance of the currently signed in user
+  async function getBalance() {
+    if (typeof window.ethereum !== 'undefined') {
+      // Request an array of accounts that are signed in (in our case just one is signed in)
+      const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(tokenAddress, Token.abi, provider)
+      const balance = await contract.balanceOf(account);
+      console.log("Balance: ", balance.toString());
+    }
+  }
+
+
+
+
 
   // Call the smart contract, read the current greeting value
   async function fetchGreeting() {
