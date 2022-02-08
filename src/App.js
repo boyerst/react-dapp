@@ -9,6 +9,7 @@ import Token from './artifacts/contracts/Token.sol/Token.json'
 const greeterAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 const tokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
+
 function App() {
   // Store greeting in local state
     // We use useState hook because this is a functional component
@@ -29,6 +30,7 @@ function App() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
   }
 
+
   // Function to read the balance of the currently signed in user
   async function getBalance() {
     if (typeof window.ethereum !== 'undefined') {
@@ -43,7 +45,6 @@ function App() {
 
 
   async function sendCoins() {
-
     if (typeof window.ethereum !== 'undefined') {
       // Request user account permissions
       await requestAccount()
@@ -59,8 +60,6 @@ function App() {
       console.log(`${amount} Coins successfully sent to ${userAccount}`);
     }
   }
-
-
 
 
   // Call the smart contract, read the current greeting value
@@ -84,6 +83,7 @@ function App() {
       }
     }    
   }
+
 
   // call the smart contract, send an update
   async function setGreeting() {
@@ -117,6 +117,7 @@ function App() {
     }
   }
 
+
   return (
     <div className="App">
       <header className="App-header">
@@ -132,12 +133,42 @@ function App() {
         <input 
           onChange={e => setGreetingValue(e.target.value)} 
           placeholder="Set greeting" 
-          // Will update UI to empty string once greeting has been reset to an empty string
+          // Will update UI to empty string upon reset (↑SEE setGreetingValue(''))
           value={greeting}
         />
+
+        <br />
+        {/* Event with Event handler invokes getBalance */}
+        <button onClick={getBalance}>Get Balance</button>
+        <button onClick={sendCoins}>Send Coins</button>
+        {/* Two user inputs...*/}
+        {/* 
+          Set the account Id as the account the user wants to send coins to
+          onChange of input field, pass in the event variable (the input text) to setUserAccount
+          e.target.value is targets the input's value which will be the Id #
+        */}
+        <input onChange={e => setUserAccount(e.target.value)} placeholder="Account ID" />
+        {/*
+          Set the amount of coins user wants to send
+        */}
+        <input onChange={e => setAmount(e.target.value)} placeholder="Amount" />
+
       </header>
     </div>
   );
 }
 
+
+
+
+
+
 export default App;
+
+
+
+
+
+
+
+
