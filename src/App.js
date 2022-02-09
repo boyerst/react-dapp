@@ -126,7 +126,7 @@ function App() {
         {/* Invoke setGreeting with new input value */}
         <button onClick={setGreeting}>Set Greeting</button>
         {/*
-          Event handler calls setGreetingValue which is the function from useState hooks that allows us to set state
+          Event handler calls setGreetingValue which is the function from useState hook that allows us to set state
           Where e.target.value is the value of the input/whatever is written to the UI
           We pass the event object and then specify the target of that object with .target.value
         */}
@@ -146,10 +146,12 @@ function App() {
           Set the account Id as the account the user wants to send coins to
           onChange of input field, pass in the event variable (the input text) to setUserAccount
           e.target.value is targets the input's value which will be the Id #
+          setUserAccount is the function that comes with useState()
         */}
         <input onChange={e => setUserAccount(e.target.value)} placeholder="Account ID" />
         {/*
           Set the amount of coins user wants to send
+          setAmount is the function that comes with useState()
         */}
         <input onChange={e => setAmount(e.target.value)} placeholder="Amount" />
 
